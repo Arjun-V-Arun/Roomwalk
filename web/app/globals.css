@@ -1,0 +1,725 @@
+@import "@fontsource-variable/archivo/wdth.css";
+@import "@fontsource/atkinson-hyperlegible/400.css";
+@import "@fontsource/atkinson-hyperlegible/700.css";
+
+/* Palette taken from where rooms are rented: distemper-painted walls, white
+   paper, graphite pencil, the violet ink of a rubber stamp on an agreement,
+   and the red of a painted To-Let board. */
+:root {
+  --wall: #e6eee9;
+  --wall-deep: #d5e2dc;
+  --paper: #ffffff;
+  --ink: #1f2428;
+  --muted: #56626a;
+  --line: #c7d3cd;
+  --stamp: #4b3ca6;
+  --stamp-soft: #ecebf8;
+  --signal: #c62f2f;
+  --signal-soft: #fbe9e7;
+  --viewer: #2b2f33;
+  --font-display: "Archivo Variable", "Archivo", "Arial Narrow", system-ui, sans-serif;
+  --font-body: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --radius-sheet: 18px;
+  --radius-control: 999px;
+  --shadow-float: 0 1px 2px rgb(20 26 30 / 0.18), 0 8px 24px rgb(20 26 30 / 0.16);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --wall: #151b18;
+    --wall-deep: #1d2521;
+    --paper: #212925;
+    --ink: #e8eeea;
+    --muted: #a3b0a9;
+    --line: #34403a;
+    --stamp: #a99cf2;
+    --stamp-soft: #2a2747;
+    --signal: #f07a6e;
+    --signal-soft: #3a2220;
+    color-scheme: dark;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--wall);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid var(--stamp);
+  outline-offset: 2px;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+.display {
+  font-family: var(--font-display);
+  font-stretch: 72%;
+  font-weight: 800;
+  letter-spacing: -0.005em;
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Rubber stamp: the one loud element ---------- */
+
+.stamp {
+  --tilt: -4deg;
+  display: inline-grid;
+  justify-items: center;
+  padding: 0.28rem 0.6rem 0.32rem;
+  border: 2.5px solid var(--stamp);
+  border-radius: 7px;
+  outline: 1.5px solid var(--stamp);
+  outline-offset: 2.5px;
+  color: var(--stamp);
+  font-family: var(--font-display);
+  font-stretch: 78%;
+  font-weight: 800;
+  font-size: 0.95rem;
+  line-height: 1.05;
+  transform: rotate(var(--tilt));
+  /* Uneven ink: a fractal-noise mask lets some paper show through. */
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='60'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -2.2 2.05'/%3E%3C/filter%3E%3Crect width='120' height='60' filter='url(%23n)'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='60'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -2.2 2.05'/%3E%3C/filter%3E%3Crect width='120' height='60' filter='url(%23n)'/%3E%3C/svg%3E");
+  white-space: nowrap;
+}
+
+.stamp small {
+  font-size: 0.72em;
+  font-weight: 650;
+  font-stretch: 85%;
+}
+
+.tag {
+  display: inline-block;
+  padding: 0.12rem 0.55rem;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.tag-signal {
+  color: var(--signal);
+  background: var(--signal-soft);
+}
+
+.tag-demo {
+  color: var(--muted);
+  background: var(--wall-deep);
+}
+
+/* ---------- Listing page ---------- */
+
+.page {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 1.25rem 1rem 4rem;
+}
+
+.masthead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--ink);
+}
+
+.wordmark {
+  font-family: var(--font-display);
+  font-stretch: 62%;
+  font-weight: 900;
+  font-size: 1.6rem;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+}
+
+.masthead a.quiet {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.lede {
+  display: grid;
+  gap: 0.9rem;
+  margin: 2.2rem 0 2.6rem;
+  max-width: 44rem;
+}
+
+.lede h1 {
+  margin: 0;
+  font-size: clamp(2.5rem, 10.5vw, 4.6rem);
+  line-height: 0.95;
+}
+
+.lede p {
+  margin: 0;
+  max-width: 36rem;
+  color: var(--muted);
+  font-size: 1.08rem;
+}
+
+.rooms {
+  display: grid;
+  gap: 1.4rem;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.room-card {
+  position: relative;
+  display: grid;
+  background: var(--paper);
+  border-radius: 14px;
+  overflow: hidden;
+  text-decoration: none;
+  box-shadow: 0 1px 0 var(--line);
+}
+
+.room-card:hover .room-photo img {
+  transform: scale(1.02);
+}
+
+.room-photo {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  background: var(--viewer);
+  overflow: hidden;
+}
+
+.room-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 300ms ease;
+}
+
+.room-photo .stamp {
+  position: absolute;
+  right: 0.8rem;
+  bottom: 0.8rem;
+  background: rgb(255 255 255 / 0.92);
+}
+
+.room-body {
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.9rem 1rem 1.1rem;
+}
+
+.room-price,
+.sheet-price {
+  font-family: var(--font-display);
+  font-stretch: 85%;
+  font-weight: 800;
+  font-size: 1.45rem;
+  line-height: 1.1;
+}
+
+.room-price span,
+.sheet-price span {
+  font-family: var(--font-body);
+  font-stretch: 100%;
+  color: var(--muted);
+  font-size: 0.95rem;
+  font-weight: 400;
+}
+
+.room-title {
+  margin: 0;
+  font-size: 1.28rem;
+  line-height: 1.15;
+}
+
+.room-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.75rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.empty {
+  padding: 2rem 1.2rem;
+  border: 2px dashed var(--line);
+  border-radius: 14px;
+  color: var(--muted);
+}
+
+.how {
+  display: grid;
+  gap: 2rem;
+  margin-top: 4rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid var(--ink);
+}
+
+@media (min-width: 820px) {
+  .how {
+    grid-template-columns: 1.3fr 1fr;
+    gap: 3.5rem;
+  }
+}
+
+.how h2 {
+  margin: 0 0 1rem;
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.steps {
+  display: grid;
+  gap: 1.1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+
+.steps li {
+  display: grid;
+  grid-template-columns: 2.4rem 1fr;
+  gap: 0.8rem;
+  align-items: start;
+  counter-increment: step;
+}
+
+.steps li::before {
+  content: counter(step);
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-stretch: 75%;
+  font-size: 1.15rem;
+}
+
+.steps strong {
+  display: block;
+}
+
+.steps p,
+.proves p {
+  margin: 0.15rem 0 0;
+  color: var(--muted);
+}
+
+.proves {
+  padding: 1.1rem 1.2rem 1.25rem;
+  background: var(--paper);
+  border-radius: 14px;
+}
+
+.proves .stamp {
+  --tilt: -3deg;
+  margin-bottom: 0.9rem;
+}
+
+.foot {
+  margin-top: 4rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* ---------- Room viewer ---------- */
+
+.viewer-page {
+  position: fixed;
+  inset: 0;
+  background: var(--viewer);
+  color: #fff;
+  overflow: hidden;
+}
+
+.viewer-canvas {
+  position: absolute;
+  inset: 0;
+}
+
+.poster {
+  position: absolute;
+  inset: 0;
+  background: var(--viewer) center / cover no-repeat;
+  transition: opacity 700ms ease;
+  pointer-events: none;
+}
+
+.poster.gone {
+  opacity: 0;
+}
+
+.loading {
+  position: absolute;
+  inset: auto 0 0;
+  display: grid;
+  place-items: center;
+  padding: 0 1rem 42vh;
+  pointer-events: none;
+  text-align: center;
+}
+
+.loading p {
+  margin: 0;
+  padding: 0.5rem 0.9rem;
+  border-radius: 10px;
+  background: rgb(20 24 27 / 0.72);
+  font-size: 0.95rem;
+}
+
+.progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: var(--stamp-bar, #8f7ff0);
+  transition: width 200ms linear, opacity 400ms ease;
+  z-index: 5;
+}
+
+.progress.indeterminate {
+  width: 35% !important;
+  animation: slide 1.1s ease-in-out infinite alternate;
+}
+
+@keyframes slide {
+  from {
+    transform: translateX(-10%);
+  }
+  to {
+    transform: translateX(200%);
+  }
+}
+
+.topbar {
+  position: absolute;
+  inset: 0 0 auto;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: start;
+  gap: 0.6rem;
+  padding: max(0.7rem, env(safe-area-inset-top)) 0.8rem 2.2rem;
+  background: linear-gradient(rgb(16 19 21 / 0.72), rgb(16 19 21 / 0));
+  pointer-events: none;
+}
+
+.topbar > * {
+  pointer-events: auto;
+}
+
+.icon-btn {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.14);
+  color: #fff;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.icon-btn svg {
+  width: 22px;
+  height: 22px;
+}
+
+.topbar h1 {
+  margin: 0.15rem 0 0;
+  font-size: 1.35rem;
+  line-height: 1.05;
+  text-shadow: 0 1px 8px rgb(0 0 0 / 0.4);
+}
+
+.topbar .sub {
+  color: rgb(255 255 255 / 0.8);
+  font-size: 0.88rem;
+}
+
+.slip {
+  padding: 0.35rem 0.45rem;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: var(--shadow-float);
+  color: #1f2428;
+}
+
+.slip .stamp {
+  --stamp: #4b3ca6;
+}
+
+.hint {
+  position: absolute;
+  left: 50%;
+  bottom: calc(9.5rem + env(safe-area-inset-bottom));
+  translate: -50% 0;
+  width: min(88vw, 22rem);
+  padding: 0.7rem 0.9rem;
+  border-radius: 12px;
+  background: rgb(20 24 27 / 0.8);
+  font-size: 0.95rem;
+  text-align: center;
+  transition: opacity 400ms ease;
+  pointer-events: none;
+}
+
+.hint.gone {
+  opacity: 0;
+}
+
+/* ?ui=0 hides everything over the room, for posters and recordings. */
+.viewer-page.bare .topbar,
+.viewer-page.bare .dock,
+.viewer-page.bare .hint,
+.viewer-page.bare .loading,
+.viewer-page.bare .progress {
+  display: none;
+}
+
+.dock {
+  position: absolute;
+  inset: auto 0 0;
+  display: grid;
+  gap: 0.6rem;
+  pointer-events: none;
+}
+
+.dock > * {
+  pointer-events: auto;
+}
+
+.chips {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0 0.8rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.chips::-webkit-scrollbar {
+  display: none;
+}
+
+.chip {
+  flex: none;
+  min-height: 44px;
+  padding: 0 1rem;
+  border: 0;
+  border-radius: var(--radius-control);
+  background: #fff;
+  color: #1f2428;
+  font-weight: 700;
+  box-shadow: var(--shadow-float);
+  cursor: pointer;
+}
+
+.chip[aria-pressed="true"] {
+  background: #4b3ca6;
+  color: #fff;
+}
+
+.sheet {
+  background: #fff;
+  color: #1f2428;
+  border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
+  padding: 0.75rem 1rem calc(0.9rem + env(safe-area-inset-bottom));
+  box-shadow: 0 -6px 24px rgb(0 0 0 / 0.18);
+}
+
+.sheet-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+/* The sheet is always white, even in dark mode, because it sits over the room. */
+.sheet .sheet-price span {
+  color: #56626a;
+}
+
+.text-btn {
+  min-height: 44px;
+  padding: 0 0.9rem;
+  border: 1.5px solid #c7d3cd;
+  border-radius: var(--radius-control);
+  background: #fff;
+  color: #1f2428;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.details {
+  display: grid;
+  gap: 1rem;
+  max-height: 52vh;
+  margin-top: 0.8rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid #c7d3cd;
+  overflow-y: auto;
+}
+
+.details dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.35rem 1rem;
+  margin: 0;
+}
+
+.details dt {
+  color: #56626a;
+}
+
+.details dd {
+  margin: 0;
+}
+
+.details h2 {
+  margin: 0 0 0.3rem;
+  font-size: 1.15rem;
+}
+
+.details p,
+.details ul {
+  margin: 0;
+  color: #3c464c;
+}
+
+.details ul {
+  padding-left: 1.1rem;
+}
+
+.panel {
+  position: absolute;
+  top: calc(4.6rem + env(safe-area-inset-top));
+  right: 0.8rem;
+  width: min(92vw, 19rem);
+  padding: 0.8rem 0.9rem;
+  border-radius: 12px;
+  background: rgb(18 22 25 / 0.88);
+  font-size: 0.86rem;
+  z-index: 4;
+}
+
+.panel h2 {
+  margin: 0 0 0.4rem;
+  font-size: 1rem;
+}
+
+.panel dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.15rem 0.8rem;
+  margin: 0 0 0.6rem;
+}
+
+.panel dt {
+  color: rgb(255 255 255 / 0.65);
+}
+
+.panel dd {
+  margin: 0;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.panel ol,
+.panel ul {
+  margin: 0.2rem 0 0.6rem;
+  padding-left: 1.1rem;
+  color: rgb(255 255 255 / 0.8);
+}
+
+.panel .text-btn {
+  min-height: 38px;
+  background: transparent;
+  color: #fff;
+  border-color: rgb(255 255 255 / 0.35);
+}
+
+.error {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  gap: 0.8rem;
+  padding: 2rem;
+  text-align: center;
+}
+
+.error h2 {
+  margin: 0;
+  font-size: 1.6rem;
+}
+
+@media (min-width: 900px) {
+  .dock {
+    inset: auto 0 1rem;
+    grid-template-columns: 1fr 24rem;
+    align-items: end;
+    padding-right: 1rem;
+  }
+  .chips {
+    align-self: end;
+    padding-bottom: 0.4rem;
+  }
+  .sheet {
+    border-radius: var(--radius-sheet);
+    padding-bottom: 0.9rem;
+  }
+  .hint {
+    bottom: 7rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .poster,
+  .hint,
+  .progress,
+  .room-photo img {
+    transition: none;
+  }
+  .progress.indeterminate {
+    animation: none;
+  }
+}
+
+/* Money in the display face: Atkinson's slashed zeros read oddly in rupee amounts. */
+.money {
+  font-family: var(--font-display);
+  font-stretch: 85%;
+  font-weight: 700;
+}

@@ -1,0 +1,15 @@
+{
+  "rooms": [
+    {
+      "id": "demo",
+      "title": "Furnished single room with study table",
+      "area": "Synthetic demo, not a real listing",
+      "rent": 9500,
+      "scannedAt": null,
+      "poster": "poster.jpg",
+      "synthetic": true,
+      "verified": false,
+      "splatCount": 395987
+    }
+  ]
+}

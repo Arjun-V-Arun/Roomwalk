@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.egg-info/
+.venv/
+.pytest_cache/
+
+# Node / Next.js
+web/node_modules/
+web/.next/
+web/out/
+web/next-env.d.ts
+web/tsconfig.tsbuildinfo
+web/bench-results.json
+
+# Pipeline working folders and raw videos
+work/
+capture/work/
+*.mp4
+*.mov
+*.mp4.frames/
+*-code.png
+
+# OS
+.DS_Store
+Thumbs.db
